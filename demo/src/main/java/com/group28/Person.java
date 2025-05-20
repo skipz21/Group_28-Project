@@ -1,3 +1,4 @@
+package com.group28;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -11,7 +12,21 @@ public class Person {
     private boolean isSuspended;
     private Date date;
 
-    public boolean addPerson() {
+    public Person(){
+        this.personID = "";
+        this.firstName = "";
+        this.lastName = "";
+        this.address = "";
+        this.birthdate = "";
+        this.isSuspended = false;
+        //initialise date and demerit points?
+    }
+
+    public String getName() {
+        return this.firstName;
+    }
+
+    public boolean addPerson(Person person) {
         //TODO: This method adds information about a person to a TXT file.
         //Condition 1: PersonID should be exactly 10 characters long;
         //The first two characters should be numbers between 2 and 9, there should be at least two special characters between characters 3 and 8,
