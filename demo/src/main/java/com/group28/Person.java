@@ -22,12 +22,19 @@ public class Person {
         //initialise date and demerit points?
     }
 
+    public String getBirthDate(){
+        return this.birthdate;
+    }
     public String getName() {
         return this.firstName;
     }
 
     public String getPersonID() {
         return this.personID;
+    }
+
+    public String getAddress(){
+        return this.address;
     }
   
     //TODO: This method adds information about a person to a TXT file.
@@ -63,13 +70,30 @@ public class Person {
             }
 
         //Example: "56s_q0k6fAB"
+        //Condition 2: 
+            //The address of the Person should follow the following format: StreetNumber|Street|City|State|Country| (Could implmement more checks).
+            String addrs = this.getAddress();
+            String[] adParts = addrs.split("\\|");
+            if(adParts.length != 5){
+                return false;
+            }
+            //Example: 32|Highland Street|Melbourne|Victoria|Australia.
 
-        
-        //Condition 2: The address of the Person should follow the following format: Street Number[Street[City]State[Country].
+
+
+        //Condition 3: 
+            //The format of the birth date of the person should follow the following format: DD-MM-YYYY. 
+            String DOB = this.getBirthDate();
+            String[] bdParts = DOB.split("-");
+            if(bdParts.length != 3){
+                return false;
+            }
             
-
-
-
+            
+            
+            //Example: 15-11-1990
+        
+        
 
 
         //The State should be only Victoria. Example: 32Highland Street[HeUbourne[Victoria]Australia.
