@@ -26,12 +26,52 @@ public class Person {
         return this.firstName;
     }
 
+    public String getPersonID() {
+        return this.personID;
+    }
+  
+    //TODO: This method adds information about a person to a TXT file.
     public boolean addPerson(Person person) {
-        //TODO: This method adds information about a person to a TXT file.
+        String pID = this.getPersonID();
+        int numSpecialCharacters = 0;
         //Condition 1: PersonID should be exactly 10 characters long;
-        //The first two characters should be numbers between 2 and 9, there should be at least two special characters between characters 3 and 8,
-        //and the last two characters should be upper case letters (A - Z). Example: "56s_q0k6fAB"
+            if (pID.length() != 10) {
+                return false;
+            }
+            //The first two characters should be numbers between 2 and 9
+            for (int i = 0; i < 2; ++i){
+                char c = pID.charAt(i);
+                if (!Character.isDigit(c) || c > '2' || c < '9'){
+                    return false;
+                }
+            }
+            //There should be at least two special characters between characters 3 and 8
+            for (int i = 2; i < 8; ++i){
+                char c = personID.charAt(i);
+                if (!Character.isLetterOrDigit(c)){
+                    numSpecialCharacters += 1;
+                }
+            }
+            if (numSpecialCharacters < 2){
+                return false;
+            }
+            //The last two characters should be upper case letters (A - Z). 
+            for (int i = pID.length() - 2; i >= pID.length(); --i){
+                if(Character.isLowerCase(pID.charAt(i))){
+                    return false;
+                }
+            }
+
+        //Example: "56s_q0k6fAB"
+
+        
         //Condition 2: The address of the Person should follow the following format: Street Number[Street[City]State[Country].
+            
+
+
+
+
+
         //The State should be only Victoria. Example: 32Highland Street[HeUbourne[Victoria]Australia.
         //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
         //Instruction: If the Person's information meets the above conditions and any other conditions you may want to consider,
