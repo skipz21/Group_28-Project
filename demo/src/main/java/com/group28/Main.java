@@ -6,13 +6,13 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        createFile("peopleList");
         Person will = new Person();
-        Person thomas = new Person();
         Person balkaran = new Person();
         Person vien = new Person();
-
-        createFile("will");
-        writeFile("will");
+        
+        Person thomas = new Person("56s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "04-03-2004", false);
+        thomas.addPerson();
     }
 
     //TODO store this txt file in a designated folder. eg testing folder.
@@ -33,11 +33,11 @@ public class Main {
         }
     }
 
-    public static void writeFile(String name) { 
+    public static void writeFile(String name, String content) { 
         try {
-            FileWriter myWriter = new FileWriter(name + ".txt");
+            FileWriter myWriter = new FileWriter(name + ".txt", true);
             //Use the person obj and get info and write to file.
-            myWriter.write(name);
+            myWriter.write(content);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
         }    

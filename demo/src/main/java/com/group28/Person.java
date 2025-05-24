@@ -11,7 +11,9 @@ public class Person {
     private HashMap<String, Integer> demeritPoints; // A variable that holds the demerit points with the offense date
     private boolean isSuspended;
     private Date date;
+    
 
+    //Empty Constructor
     public Person(){
         this.personID = "";
         this.firstName = "";
@@ -22,11 +24,23 @@ public class Person {
         //initialise date and demerit points?
     }
 
+
+    //Constructor that can be used for testing
+    public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended){
+        this.personID = personID;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.birthdate = birthdate;
+        this.isSuspended = isSuspended;
+        //initialise date and demerit points?
+    }
+
     public String getBirthDate(){
         return this.birthdate;
     }
     public String getName() {
-        return this.firstName;
+        return this.firstName + " " + this.lastName;
     }
 
     public String getPersonID() {
@@ -36,22 +50,28 @@ public class Person {
     public String getAddress(){
         return this.address;
     }
+
+    public boolean getSuspensionStatus(){
+        return this.isSuspended;
+    }
   
     //TODO: This method adds information about a person to a TXT file.
-    public boolean addPerson(Person person) {
+    public boolean addPerson() {
         String pID = this.getPersonID();
         int numSpecialCharacters = 0;
         //Condition 1: PersonID should be exactly 10 characters long;
             if (pID.length() != 10) {
                 return false;
             }
-            //The first two characters should be numbers between 2 and 9
+            System.out.println("PASSED: LENGTH");
+            //The first two characters should be numbers between 2 and 9 *** ASK IF INCLUDED
             for (int i = 0; i < 2; ++i){
                 char c = pID.charAt(i);
-                if (!Character.isDigit(c) || c > '2' || c < '9'){
+                if ((!Character.isDigit(c)) || (c < '2') || (c > '9')){
                     return false;
                 }
             }
+            System.out.println("PASSED: FIRST 2 CHARACTERS");
             //There should be at least two special characters between characters 3 and 8
             for (int i = 2; i < 8; ++i){
                 char c = personID.charAt(i);
@@ -62,19 +82,24 @@ public class Person {
             if (numSpecialCharacters < 2){
                 return false;
             }
+            System.out.println("PASSED: SPECIAL CHARACTERS");
             //The last two characters should be upper case letters (A - Z). 
-            for (int i = pID.length() - 2; i >= pID.length(); --i){
+            for (int i = pID.length() - 1; i >= pID.length(); --i){
                 if(Character.isLowerCase(pID.charAt(i))){
                     return false;
                 }
             }
-
+            System.out.println("PASSED: LAST 2 CHARACTERS");
         //Example: "56s_q0k6fAB"
         //Condition 2: 
             //The address of the Person should follow the following format: StreetNumber|Street|City|State|Country| (Could implmement more checks).
             String addrs = this.getAddress();
             String[] adParts = addrs.split("\\|");
             if(adParts.length != 5){
+                return false;
+            }
+            //The State should be only Victoria.
+            if(!adParts[3].equals("Victoria") || (!adParts[4].equals("Australia"))){
                 return false;
             }
             //Example: 32|Highland Street|Melbourne|Victoria|Australia.
@@ -89,18 +114,23 @@ public class Person {
                 return false;
             }
             
-            
-            
+            //checks if month is valid
+            if((Integer.parseInt(bdParts[1]) > 12) ||(Integer.parseInt(bdParts[1]) < 1)){
+                return false;
+            }
             //Example: 15-11-1990
         
-        
-
-
-        //The State should be only Victoria. Example: 32Highland Street[HeUbourne[Victoria]Australia.
-        //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
         //Instruction: If the Person's information meets the above conditions and any other conditions you may want to consider,
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
+            String output = this.getPersonID() + "\n" + 
+                            this.getName() + "\n" + 
+                            this.getAddress() + "\n" + 
+                            this.getBirthDate() + "\n" +
+                            "Suspended: " + this.getSuspensionStatus() + "\n" + "\n";
+
+            Main.writeFile("peopleList", output);
+
         return true;
     }
 
