@@ -1,5 +1,9 @@
 package com.group28;
 import java.util.Date;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Person {
@@ -8,10 +12,12 @@ public class Person {
     private String lastName;
     private String address;
     private String birthdate;
-    private HashMap<String, Integer> demeritPoints; // A variable that holds the demerit points with the offense date
     private boolean isSuspended;
     private Date date;
-    
+
+    private HashMap<String, Integer> demeritPoints; // A variable that holds the demerit points with the offense date
+    private ArrayList<String> demeritDate = new ArrayList<String>();
+    private ArrayList<Integer> demeritValue = new ArrayList<Integer>();
 
     //Empty Constructor
     public Person(){
@@ -24,7 +30,6 @@ public class Person {
         //initialise date and demerit points?
     }
 
-
     //Constructor that can be used for testing
     public Person(String personID, String firstName, String lastName, String address, String birthdate, boolean isSuspended){
         this.personID = personID;
@@ -35,6 +40,11 @@ public class Person {
         this.isSuspended = isSuspended;
         //initialise date and demerit points?
     }
+
+    public void addOffense(String date, int points) {
+        this.demeritDate.add(date);
+        this.demeritValue.add(points);
+    }   
 
     public String getBirthDate(){
         return this.birthdate;
@@ -147,15 +157,135 @@ public class Person {
         return true;
     }
 
-    public String addDemeritPoints() {
+    public String addDemeritPoints(String filename) {
+        //To run code do cd to java folder. For Will only. my version outdated or something.
+        //javac com/group28/*.java
+        //java com.group28.Main
+
+        String status = "Failed"; //Treat as a boolean
+        if (this.demeritDate.size() != this.demeritValue.size()) {
+            System.out.println("There must be the same number of Dates and Points");
+            status = "Failed";
+            return status;
+        } 
+
         //TODO: This method adds demerit points for a given person in a TXT file.
         //Condition 1: The format of the date of the offense should follow the following format: DD-MM-YYYY. Example: 15-11-1990
+        if (this.demeritDate.size() > 0)
+            
+            for (int i = 0; i < demeritDate.size(); i++) {
+                
+                String[] dateParts = demeritDate.get(i).split("-");
+                if(dateParts.length == 3){
+                    //Maybe i can add more restrictions here
+                    if (Integer.parseInt(dateParts[0]) > 31 && Integer.parseInt(dateParts[0]) < 0 && dateParts[0].length() != 2) {
+                        System.out.println("Error with DD at record " + i+1 + " .");
+                        status = "Failed";
+                        return status;
+                    }
+                    if (Integer.parseInt(dateParts[1]) > 12 && Integer.parseInt(dateParts[1]) < 0 && dateParts[1].length() != 2) {
+                        System.out.println("Error with DD at record " + i+1 + " .");
+                        status = "Failed";
+                        return status;
+                    }
+                    if (dateParts[2].length() != 4) {
+                        System.out.println("Error with YYYY at record " + i+1 + " .");
+                        status = "Failed";
+                        return status;
+                    }   
+                }
+            }
+            else {
+                System.out.println("No offenses listed");
+            }
+
         //Condition 2: The demerit points must be a whole number between 1-6
+        if (this.demeritValue.size() > 0) {
+            for (int i = 0; i < demeritValue.size(); ++i) {
+                if (demeritValue.get(i) < 0 && demeritValue.get(i) > 6) {
+                    System.out.println("Demerit Points must be between 1-6");
+                    status = "Failed";
+                    return status;
+                }
+            }
+        }
+
         //Condition 3: If the person is under 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 6.
+        String DOB = this.getBirthDate();
+        String[] bdParts = DOB.split("-");
+        int totalPoints = 0;
+
+        if (2025 - Integer.parseInt(bdParts[2]) < 21 && 2025 - Integer.parseInt(bdParts[2]) > 0){
+            for (int i = 0; i < this.demeritValue.size(); ++i) {
+                if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
+                    totalPoints += demeritValue.get(i);
+                }
+            }
+            if (totalPoints > 6) {
+                this.isSuspended = true;
+            }
+        }
         //If the person is over 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 12.
+        else if (2025 - Integer.parseInt(bdParts[2]) > 0) {
+            for (int i = 0; i < this.demeritValue.size(); ++i) {
+                if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
+                    totalPoints += demeritValue.get(i);
+                }
+            }
+            if (totalPoints > 12) {
+                this.isSuspended = true;
+            }
+        }
+        else {
+            System.out.println("Age must be positive");
+            status = "Failed";
+            return status;
+        }
+
         //Instruction: If the above conditions and any other conditions you may want to consider are met, the demerit points for a person should be inserted into the TXT file,
         //and the addDemeritPoints function should return "Success". Otherwise, the addDemeritPoints function should return "Failed".
-        return "Success";
+        //I could probably migrate this code somewhere.
+        //File creator
+        try {
+            File myObj = new File(filename + ".txt");
+
+            if (myObj.createNewFile()) {
+                System.out.println("File created: " + filename);
+            } 
+            else {
+                System.out.println("File already exists."); 
+            }
+        } 
+        catch (IOException e) {
+            System.out.println("An error occurred. When creating the file");
+            status = "Failed";
+            return status;
+        }
+
+        //File writer
+        try {
+            FileWriter myWriter = new FileWriter(filename + ".txt", true);
+            if (this.demeritValue.size() > 0 && this.demeritDate.size() > 0) {
+                myWriter.write("Demerit list\n");
+                myWriter.write("Date\t\tPoints\n");
+                for (int i = 0; i < demeritValue.size(); ++i) {
+                    myWriter.write(demeritDate.get(i) + "\t" + demeritValue.get(i) + "\n");
+                }
+            }
+            else {
+                myWriter.write("No records found.");
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        }    
+        catch (IOException e) {
+            System.out.println("An error occurred. When writing to the file");
+            status = "Failed";
+            return status;
+        }
+
+        status = "Success";
+        return status;
     }
 }
 
