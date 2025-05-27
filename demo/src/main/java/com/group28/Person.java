@@ -65,7 +65,7 @@ public class Person {
         return this.isSuspended;
     }
   
-    //TODO: This method adds information about a person to a TXT file.
+    //todo: This method adds information about a person to a TXT file.
     public boolean addPerson() {
         String pID = this.getPersonID();
         int numSpecialCharacters = 0;
@@ -144,8 +144,9 @@ public class Person {
         return true;
     }
 
-    public boolean updatePersonalDetails() {
-        //TODO: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
+public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
+
+        //todo: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
         //Condition 1: If a person is under 18, their address cannot be changed.
@@ -154,6 +155,105 @@ public class Person {
         //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
         //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
         //Otherwise, the Person's updated information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
+        
+        // Parse the existing birthdate to calculate age
+        String[] originalDOBParts = this.birthdate.split("-");
+        int originalYear = Integer.parseInt(originalDOBParts[2]);
+        int age = 2025 - originalYear;
+
+        // Condition 1: If person is under 18, address cannot be changed
+        if (age < 18 && !this.address.equals(newAddress)) {
+            System.out.println("Update failed: Address cannot be changed for persons under 18.");
+            return false;
+        }
+
+        // Condition 2: If birthdate is changed, no other fields can be changed
+        if (!this.birthdate.equals(newBirthdate)) {
+            if (!this.personID.equals(newID) || 
+                !this.firstName.equals(newFirstName) || 
+                !this.lastName.equals(newLastName) || 
+                !this.address.equals(newAddress)) {
+                System.out.println("Update failed: Only birthdate can be changed.");
+                return false;
+            }
+
+            // Validate birthdate format
+            String[] bdParts = newBirthdate.split("-");
+            if (bdParts.length != 3 || 
+            Integer.parseInt(bdParts[1]) < 1 || Integer.parseInt(bdParts[1]) > 12) {
+            System.out.println("Update failed: Invalid birthdate format.");
+            return false;
+            }
+        }
+
+        // Condition 3: If first digit of original ID is even, ID cannot be changed
+        char firstChar = this.personID.charAt(0);
+        if (Character.isDigit(firstChar) && (firstChar - '0') % 2 == 0) {
+            if (!this.personID.equals(newID)) {
+                System.out.println("Update failed: ID cannot be changed for IDs starting with an even digit.");
+                return false;
+            }
+        }
+
+        // Validate new ID structure (same rules from addPerson)
+        if (newID.length() != 10) {
+            System.out.println("Update failed: ID must be 10 characters long.");
+            return false;
+        }
+
+        for (int i = 0; i < 2; ++i) {
+            char c = newID.charAt(i);
+            if (!Character.isDigit(c) || c < '2' || c > '9') {
+                System.out.println("Update failed: First two characters must be digits 2-9.");
+                return false;
+            }
+        }
+
+        int numSpecialChars = 0;
+        for (int i = 2; i < 8; ++i) {
+            if (!Character.isLetterOrDigit(newID.charAt(i))) {
+                numSpecialChars++;
+            }
+        }
+
+        if (numSpecialChars < 2) {
+            System.out.println("Update failed: Must contain at least two special characters between characters 3 and 8.");
+            return false;
+        }
+
+        for (int i = 8; i < 10; ++i) {
+            char c = newID.charAt(i);
+            if (!Character.isUpperCase(c)) {
+                System.out.println("Update failed: Last two characters must be uppercase letters.");
+                return false;
+            }
+        }
+
+        // Validate new address format
+        String[] addressParts = newAddress.split("\\|");
+        if (addressParts.length != 5 || 
+            !addressParts[3].equals("Victoria") || 
+            !addressParts[4].equals("Australia")) {
+            System.out.println("Update failed: Address must be in the format and located in Victoria, Australia.");
+            return false;
+        }
+
+        // All checks passed, update internal state
+        this.personID = newID;
+        this.firstName = newFirstName;
+        this.lastName = newLastName;
+        this.address = newAddress;
+        this.birthdate = newBirthdate;
+
+        // Rebuild the record and write to file
+        String updatedData = this.getPersonID() + "\n" +
+                            this.getName() + "\n" +
+                            this.getAddress() + "\n" +
+                            this.getBirthDate() + "\n" +
+                            "Suspended: " + this.getSuspensionStatus() + "\n\n";
+
+        Main.writeFile("peopleList", updatedData);
+
         return true;
     }
 
@@ -169,7 +269,7 @@ public class Person {
             return status;
         } 
 
-        //TODO: This method adds demerit points for a given person in a TXT file.
+        //This method adds demerit points for a given person in a TXT file.
         //Condition 1: The format of the date of the offense should follow the following format: DD-MM-YYYY. Example: 15-11-1990
         if (this.demeritDate.size() > 0)
             
