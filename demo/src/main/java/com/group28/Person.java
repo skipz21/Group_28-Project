@@ -246,6 +246,7 @@ public class Person {
         //and the addDemeritPoints function should return "Success". Otherwise, the addDemeritPoints function should return "Failed".
         //I could probably migrate this code somewhere.
         //File creator
+        boolean write = true;
         try {
             File myObj = new File(filename + ".txt");
 
@@ -253,7 +254,8 @@ public class Person {
                 System.out.println("File created: " + filename);
             } 
             else {
-                System.out.println("File already exists."); 
+                write = false;
+                System.out.println("File already exists. No writing to the existing file will occur"); 
             }
         } 
         catch (IOException e) {
@@ -263,25 +265,27 @@ public class Person {
         }
 
         //File writer
-        try {
-            FileWriter myWriter = new FileWriter(filename + ".txt", true);
-            if (this.demeritValue.size() > 0 && this.demeritDate.size() > 0) {
-                myWriter.write("Demerit list\n");
-                myWriter.write("Date\t\tPoints\n");
-                for (int i = 0; i < demeritValue.size(); ++i) {
-                    myWriter.write(demeritDate.get(i) + "\t" + demeritValue.get(i) + "\n");
+        if (write) {
+            try {
+                FileWriter myWriter = new FileWriter(filename + ".txt", true);
+                if (this.demeritValue.size() > 0 && this.demeritDate.size() > 0) {
+                    myWriter.write("Demerit list\n");
+                    myWriter.write("Date\t\tPoints\n");
+                    for (int i = 0; i < demeritValue.size(); ++i) {
+                        myWriter.write(demeritDate.get(i) + "\t" + demeritValue.get(i) + "\n");
+                    }
                 }
+                else {
+                    myWriter.write("No records found.");
+                }
+                myWriter.close();
+                System.out.println("Successfully wrote to the file.");
+            }    
+            catch (IOException e) {
+                System.out.println("An error occurred. When writing to the file");
+                status = "Failed";
+                return status;
             }
-            else {
-                myWriter.write("No records found.");
-            }
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        }    
-        catch (IOException e) {
-            System.out.println("An error occurred. When writing to the file");
-            status = "Failed";
-            return status;
         }
 
         status = "Success";
