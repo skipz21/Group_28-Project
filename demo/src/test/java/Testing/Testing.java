@@ -36,6 +36,18 @@ public class Testing{
         Person thomas = new Person("66s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "14-13-2011", false);
         assertFalse(thomas.addPerson());
     }
+
+
+
+//--------------------- Tests for updatePersonalDetails() ---------------------
+
+    //Test if program will update details when all values are valid entries.
+    @Test
+    public void updateAllValidDetails() {
+        Person p = new Person("56a_b@c!DE", "Taylor", "Swift", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990", false);
+        boolean result = p.updatePersonalDetails("56a_b@c!DE", "Tayla", "Swiftie", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990");
+        assertEquals(true, result); // All fields valid, only first/last names changed
+    }
 }
 
 
