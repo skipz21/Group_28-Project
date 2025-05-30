@@ -46,8 +46,31 @@ public class Testing{
     public void updateAllValidDetails() {
         Person taylorTEST = new Person("56a_b@c!DE", "Taylor", "Swift", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990", false);
         boolean result = taylorTEST.updatePersonalDetails("56a_b@c!DE", "Tayla", "Swiftie", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990");
+        
         assertEquals(true, result); // All fields valid, only first/last names changed
     }
+
+
+    //Test if program will allow under 18's to change their address.
+    @Test
+    public void underageAddressChangeShouldFail() {
+        Person johnTEST = new Person("72@!PorK", "John", "Pork", "22|Calling St|Geelong|Victoria|Australia", "11-01-2010", false);
+        boolean result = johnTEST.updatePersonalDetails("72@!PorK", "John", "Pork", "99|Approaching St|Geelong|Victoria|Australia", "11-01-2010");
+        
+        assertEquals(false, result); // Minor can't change address
+    }
+    
+
+    //Test if program will allow changing ID when first digit is even
+    @Test
+    public void cannotChangeEvenStartingID() {
+        Person shrekTest = new Person("62s_d@x!PQ", "Shrek", "Ogre", "7|Swamp court|Ballarat|Victoria|Australia", "12-06-1981", false);
+        boolean result = shrekTest.updatePersonalDetails("77s_d@x!PQ", "Shrek", "Ogre", "7|Swamp court|Ballarat|Victoria|Australia", "12-06-1981");
+        
+        assertEquals(false, result); // Can't change ID that starts with even digit
+    }
+
+
 }
 
 
