@@ -44,8 +44,8 @@ public class Testing{
     //Test if program will update details when all values are valid entries.
     @Test
     public void updateAllValidDetails() {
-        Person p = new Person("56a_b@c!DE", "Taylor", "Swift", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990", false);
-        boolean result = p.updatePersonalDetails("56a_b@c!DE", "Tayla", "Swiftie", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990");
+        Person taylorTEST = new Person("56a_b@c!DE", "Taylor", "Swift", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990", false);
+        boolean result = taylorTEST.updatePersonalDetails("56a_b@c!DE", "Tayla", "Swiftie", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990");
         assertEquals(true, result); // All fields valid, only first/last names changed
     }
 }
