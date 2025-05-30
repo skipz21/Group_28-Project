@@ -41,17 +41,19 @@ public class Testing{
 
 //--------------------- Tests for updatePersonalDetails() ---------------------
 
+
+
     //Test if program will update details when all values are valid entries.
     @Test
     public void updateAllValidDetails() {
-        Person taylorTEST = new Person("56a_b@c!DE", "Taylor", "Swift", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990", false);
-        boolean result = taylorTEST.updatePersonalDetails("56a_b@c!DE", "Tayla", "Swiftie", "10|Melbourne St|Melbourne|Victoria|Australia", "13-12-1990");
+        Person gatoTEST = new Person("56a_b@c!DE", "El", "Gato", "10|Creature St|Melbourne|Victoria|Australia", "13-12-1990", false);
+        boolean result = gatoTEST.updatePersonalDetails("56a_b@c!DE", "La", "Gatito", "10|Creature St|Melbourne|Victoria|Australia", "13-12-1990");
         
         assertEquals(true, result); // All fields valid, only first/last names changed
     }
 
 
-    //Test if program will allow under 18's to change their address.
+    //Test if program will deny under 18's to change their address.
     @Test
     public void underageAddressChangeShouldFail() {
         Person johnTEST = new Person("72@!PorK", "John", "Pork", "22|Calling St|Geelong|Victoria|Australia", "11-01-2010", false);
@@ -59,9 +61,9 @@ public class Testing{
         
         assertEquals(false, result); // Minor can't change address
     }
-    
 
-    //Test if program will allow changing ID when first digit is even
+
+    //Test if program will deny changing ID when first digit is even
     @Test
     public void cannotChangeEvenStartingID() {
         Person shrekTest = new Person("62s_d@x!PQ", "Shrek", "Ogre", "7|Swamp court|Ballarat|Victoria|Australia", "12-06-1981", false);
@@ -70,6 +72,24 @@ public class Testing{
         assertEquals(false, result); // Can't change ID that starts with even digit
     }
 
+
+    //Test if program will deny changing DOB and other fields concurrently.
+    @Test
+    public void birthdateChangeWithOtherFieldsShouldFail() {
+        Person lebronTest = new Person("57k_l#r$MN", "Lebron", "James", "25|Sunshine Avenue|Melbourne|Victoria|Australia", "01-09-1996", false);
+        boolean result = lebronTest.updatePersonalDetails("57k_l#r$MN", "Lebron", "Goat", "25|Sunshine Avenue|Melbourne|Victoria|Australia", "02-02-1995");
+        
+        assertEquals(false, result); // Can't change DOB and another field
+    }
+
+
+    //Test if program will allow changing DOB only.
+    @Test
+    public void validBirthdateChangeOnly() {
+        Person ryanTest = new Person("59g_h%v^XY", "Ryan", "Gosling", "30|Me Blvd|Melbourne|Victoria|Australia", "11-10-1979", false);
+        boolean result = ryanTest.updatePersonalDetails("59g_h%v^XY", "Ryan", "Gosling", "30|Me Blvd|Melbourne|Victoria|Australia", "12-11-1980");
+        assertEquals(true, result); // Valid DOB-only change
+    }
 
 }
 
