@@ -269,6 +269,15 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
             return status;
         } 
 
+        //Checks if demerit point value exceeds 6 or less than 0. An offence should not have a demerit value of < 0 and 6 >
+        for (int i = 0; i < demeritValue.size(); i++) {
+            if (demeritValue.get(i) > 6 || demeritValue.get(i) < 0) {
+                System.out.println("Demerit point value per offence must be between 1-6");
+                status = "Failed";
+                return status;
+            }
+        }
+
         //This method adds demerit points for a given person in a TXT file.
         //Condition 1: The format of the date of the offense should follow the following format: DD-MM-YYYY. Example: 15-11-1990
         if (this.demeritDate.size() > 0)
@@ -315,18 +324,18 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         String[] bdParts = DOB.split("-");
         int totalPoints = 0;
 
-        if (2025 - Integer.parseInt(bdParts[2]) < 21 && 2025 - Integer.parseInt(bdParts[2]) > 0){
-            for (int i = 0; i < this.demeritValue.size(); ++i) {
-                if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
-                    totalPoints += demeritValue.get(i);
-                }
-            }
-            if (totalPoints > 6) {
-                this.isSuspended = true;
-            }
-        }
+        // if (2025 - Integer.parseInt(bdParts[2]) < 21 && 2025 - Integer.parseInt(bdParts[2]) > 0){
+        //     for (int i = 0; i < this.demeritValue.size(); ++i) {
+        //         if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
+        //             totalPoints += demeritValue.get(i);
+        //         }
+        //     }
+        //     if (totalPoints > 6) {
+        //         this.isSuspended = true;
+        //     }
+        // }
         //If the person is over 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 12.
-        else if (2025 - Integer.parseInt(bdParts[2]) > 0) {
+        if (2025 - Integer.parseInt(bdParts[2]) > 0) {
             for (int i = 0; i < this.demeritValue.size(); ++i) {
                 if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
                     totalPoints += demeritValue.get(i);
@@ -347,33 +356,36 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         //I could probably migrate this code somewhere.
         //File creator
         boolean write = true;
-        try {
-            File myObj = new File(filename + ".txt");
+        // try {
+        //     File myObj = new File(filename + ".txt");
 
-            if (myObj.createNewFile()) {
-                System.out.println("File created: " + filename);
-            } 
-            else {
-                write = false;
-                System.out.println("File already exists. No writing to the existing file will occur"); 
-            }
-        } 
-        catch (IOException e) {
-            System.out.println("An error occurred. When creating the file");
-            status = "Failed";
-            return status;
-        }
+        //     if (myObj.createNewFile()) {
+        //         System.out.println("File created: " + filename);
+        //     } 
+        //     else {
+        //         write = false;
+        //         System.out.println("File already exists. No writing to the existing file will occur"); 
+        //     }
+        // } 
+        // catch (IOException e) {
+        //     System.out.println("An error occurred. When creating the file");
+        //     status = "Failed";
+        //     return status;
+        // }
 
         //File writer
+        //There should not be any errors because the filename in main should be the same.
         if (write) {
             try {
                 FileWriter myWriter = new FileWriter(filename + ".txt", true);
                 if (this.demeritValue.size() > 0 && this.demeritDate.size() > 0) {
+                    myWriter.write(this.firstName + "\n");
                     myWriter.write("Demerit list\n");
                     myWriter.write("Date\t\tPoints\n");
                     for (int i = 0; i < demeritValue.size(); ++i) {
                         myWriter.write(demeritDate.get(i) + "\t" + demeritValue.get(i) + "\n");
                     }
+                    myWriter.write("\n");
                 }
                 else {
                     myWriter.write("No records found.");
@@ -382,7 +394,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
                 System.out.println("Successfully wrote to the file.");
             }    
             catch (IOException e) {
-                System.out.println("An error occurred. When writing to the file");
+                System.out.println("An error occurred. When writing to the file. File likely does not exist");
                 status = "Failed";
                 return status;
             }

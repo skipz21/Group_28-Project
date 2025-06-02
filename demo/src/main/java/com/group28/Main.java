@@ -6,7 +6,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        createFile("peopleList");
+        String inputFilename = "peopleList";
+        createFile(inputFilename); //Mandatory for addOffense
         Person balkaran = new Person();
         Person vien = new Person();
         
@@ -15,14 +16,13 @@ public class Main {
         will.addOffense("20-10-2023", 5);
 
         String output;
-        output = will.addDemeritPoints("testing");
+        output = will.addDemeritPoints(inputFilename);
         System.out.println("[" + output + "]");
 
         Person thomas = new Person("56s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "04-03-2004", false);
         thomas.addPerson();
     }
 
-    //TODO store this txt file in a designated folder. eg testing folder.
     //Edit this logic for all people. iterate through people or list of people as input.
     public static void createFile(String name) {
         try {
