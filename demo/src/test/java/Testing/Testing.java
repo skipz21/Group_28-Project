@@ -88,6 +88,7 @@ public class Testing{
     public void validBirthdateChangeOnly() {
         Person ryanTest = new Person("59g_h%v^XY", "Ryan", "Gosling", "30|Me Blvd|Melbourne|Victoria|Australia", "11-10-1979", false);
         boolean result = ryanTest.updatePersonalDetails("59g_h%v^XY", "Ryan", "Gosling", "30|Me Blvd|Melbourne|Victoria|Australia", "12-11-1980");
+        
         assertEquals(true, result); // Valid DOB-only change
     }
 
