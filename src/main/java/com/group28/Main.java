@@ -11,13 +11,15 @@ public class Main {
         Person balkaran = new Person();
         Person vien = new Person();
         
-        Person will = new Person("wow", "William", "L", "13|Earth Street|Yololand|Cooked|Neptune", "03-03-2006", false);
-        will.addOffense("20-10-2021", 1);
-        will.addOffense("20-10-2023", 5);
+        // Person will = new Person("wow", "William", "L", "13|Earth Street|Yololand|Cooked|Neptune", "03-03-2006", false);
+        // will.addOffense("20-10-2021", 1);
+        // will.addOffense("20-10-2023", 3);
+        // will.addOffense("21-10-2023", 3);
+        // will.addOffense("22-7-2025", 3);
 
-        String output;
-        output = will.addDemeritPoints(inputFilename);
-        System.out.println("[" + output + "]");
+        // String output;
+        // output = will.addDemeritPoints(inputFilename);
+        // System.out.println("[" + output + "]");
 
         Person thomas = new Person("56s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "04-03-2004", false);
         thomas.addPerson();
@@ -27,6 +29,12 @@ public class Main {
     public static void createFile(String name) {
         try {
             File myObj = new File(name + ".txt");
+
+            //Replace file
+            if (myObj.exists()) {
+                myObj.delete();
+            }
+            
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
             } 

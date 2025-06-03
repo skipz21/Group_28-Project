@@ -13,9 +13,9 @@ public class Person {
     private String address;
     private String birthdate;
     private boolean isSuspended;
-    private Date date;
+    // private Date date;
 
-    private HashMap<String, Integer> demeritPoints; // A variable that holds the demerit points with the offense date
+    // private HashMap<String, Integer> demeritPoints; // A variable that holds the demerit points with the offense date
     private ArrayList<String> demeritDate = new ArrayList<String>();
     private ArrayList<Integer> demeritValue = new ArrayList<Integer>();
 
@@ -272,7 +272,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         //Checks if demerit point value exceeds 6 or less than 0. An offence should not have a demerit value of < 0 and 6 >
         for (int i = 0; i < demeritValue.size(); i++) {
             if (demeritValue.get(i) > 6 || demeritValue.get(i) < 0) {
-                System.out.println("Demerit point value per offence must be between 1-6");
+                System.out.println("The demerit points per offence must be a whole number between 1-6");
                 status = "Failed";
                 return status;
             }
@@ -287,13 +287,13 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
                 String[] dateParts = demeritDate.get(i).split("-");
                 if(dateParts.length == 3){
                     //Maybe i can add more restrictions here
-                    if (Integer.parseInt(dateParts[0]) > 31 && Integer.parseInt(dateParts[0]) < 0 && dateParts[0].length() != 2) {
+                    if (Integer.parseInt(dateParts[0]) > 31 || Integer.parseInt(dateParts[0]) < 0 || dateParts[0].length() != 2) {
                         System.out.println("Error with DD at record " + i+1 + " .");
                         status = "Failed";
                         return status;
                     }
-                    if (Integer.parseInt(dateParts[1]) > 12 && Integer.parseInt(dateParts[1]) < 0 && dateParts[1].length() != 2) {
-                        System.out.println("Error with DD at record " + i+1 + " .");
+                    if (Integer.parseInt(dateParts[1]) > 12 || Integer.parseInt(dateParts[1]) < 0 || dateParts[1].length() != 2) {
+                        System.out.println("Error with MM at record " + i+1 + " .");
                         status = "Failed";
                         return status;
                     }
@@ -324,20 +324,27 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         String[] bdParts = DOB.split("-");
         int totalPoints = 0;
 
-        // if (2025 - Integer.parseInt(bdParts[2]) < 21 && 2025 - Integer.parseInt(bdParts[2]) > 0){
-        //     for (int i = 0; i < this.demeritValue.size(); ++i) {
-        //         if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
-        //             totalPoints += demeritValue.get(i);
-        //         }
-        //     }
-        //     if (totalPoints > 6) {
-        //         this.isSuspended = true;
-        //     }
-        // }
-        //If the person is over 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 12.
-        if (2025 - Integer.parseInt(bdParts[2]) > 0) {
+        if (2025 - Integer.parseInt(bdParts[2]) < 21 && 2025 - Integer.parseInt(bdParts[2]) > 0){
             for (int i = 0; i < this.demeritValue.size(); ++i) {
-                if (this.demeritDate.get(i).contains("2023") || this.demeritDate.get(i).contains("2024") || this.demeritDate.get(i).contains("2025")) {
+                String[] dateParts = demeritDate.get(i).split("-");
+                
+                //Dont need to add extra checks cuz the code above deals with it
+                //My assumption is that "within two years" means between June 2023 - June 2025
+                if ((this.demeritDate.get(i).contains("2023") && Integer.parseInt(dateParts[1]) >= 6) || this.demeritDate.get(i).contains("2024") || (this.demeritDate.get(i).contains("2025") && Integer.parseInt(dateParts[1]) <= 6)) {
+                    totalPoints += demeritValue.get(i);
+                }
+            }
+            if (totalPoints > 6) {
+                this.isSuspended = true;
+            }
+        }
+        // If the person is over 21, the isSuspended variable should be set to true if the total demerit points within two years exceed 12.
+        else if (2025 - Integer.parseInt(bdParts[2]) > 0) {
+            for (int i = 0; i < this.demeritValue.size(); ++i) {
+                String[] dateParts = demeritDate.get(i).split("-");
+                
+                //Same thing here
+                if ((this.demeritDate.get(i).contains("2023") && Integer.parseInt(dateParts[1]) >= 6) || this.demeritDate.get(i).contains("2024") || (this.demeritDate.get(i).contains("2025") && Integer.parseInt(dateParts[1]) <= 6)) {
                     totalPoints += demeritValue.get(i);
                 }
             }
@@ -379,11 +386,18 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
             try {
                 FileWriter myWriter = new FileWriter(filename + ".txt", true);
                 if (this.demeritValue.size() > 0 && this.demeritDate.size() > 0) {
-                    myWriter.write(this.firstName + "\n");
+                    myWriter.write(this.firstName + "'s ");
                     myWriter.write("Demerit list\n");
                     myWriter.write("Date\t\tPoints\n");
                     for (int i = 0; i < demeritValue.size(); ++i) {
                         myWriter.write(demeritDate.get(i) + "\t" + demeritValue.get(i) + "\n");
+                    }
+                    myWriter.write("Suspension Status: ");
+                    if(this.isSuspended) {
+                        myWriter.write("Suspended\n");
+                    }
+                    else {
+                        myWriter.write("Not Suspended\n");
                     }
                     myWriter.write("\n");
                 }

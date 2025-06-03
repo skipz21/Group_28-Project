@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 
+import com.group28.Main;
 import com.group28.Person;
 
 public class Testing{
@@ -90,6 +91,112 @@ public class Testing{
         boolean result = ryanTest.updatePersonalDetails("59g_h%v^XY", "Ryan", "Gosling", "30|Me Blvd|Melbourne|Victoria|Australia", "12-11-1980");
         
         assertEquals(true, result); // Valid DOB-only change
+    }
+
+    //--------------------- Tests for addDemeritPoints() ---------------------
+    @Test
+    public void pointsOutOfRange() {
+        String filename = "test";
+        //Must create file because addDemeritPoints writes to that file
+        Main.createFile(filename);
+        //We would need to create the person first with their birthday to properly determine age.
+        Person ovoTEST = new Person("57a_b@c!DE", "len", "ovo", "1|Microsoft St|Melbourne|Victoria|Australia", "13-11-1912", false);
+
+        //Actual data we are testing
+        ovoTEST.addOffense("13-10-2024", 7);
+
+        String status = ovoTEST.addDemeritPoints(filename);
+        boolean result = false;
+
+        if (status == "Success") {
+            result = true;
+        }
+
+        assertEquals(false, result); 
+    }
+    
+    @Test
+    public void checkSuspension1() {
+        String filename = "test1";
+        Main.createFile(filename);
+
+        Person osTEST = new Person("58a_b@c!DE", "mac", "os", "1|Apple St|Melbourne|Victoria|Australia", "13-10-2005", false);
+
+        //Actual data we are testing
+        osTEST.addOffense("30-06-2023", 3);
+        osTEST.addOffense("02-01-2024", 2);
+        osTEST.addOffense("01-06-2025", 3);
+
+        String status = osTEST.addDemeritPoints(filename);
+        boolean result = false;
+
+        if (status == "Success") {
+            result = true;
+        }
+
+        assertEquals(true, result); 
+    }
+
+    @Test
+    public void checkSuspension2() {
+        String filename = "test2";
+        Main.createFile(filename);
+        
+        Person eggTEST = new Person("59a_b@c!DE", "easter", "egg", "1|Easter St|Melbourne|Victoria|Australia", "01-01-2000", false);
+
+        //Actual data we are testing
+        eggTEST.addOffense("12-05-2023", 3);
+        eggTEST.addOffense("17-04-2024", 2);
+        eggTEST.addOffense("23-06-2025", 4);
+
+        String status = eggTEST.addDemeritPoints(filename);
+        boolean result = false;
+
+        if (status == "Success") {
+            result = true;
+        }
+
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void invalidDateFormat() {
+        String filename = "test3";
+        Main.createFile(filename);
+        
+        Person jacksonTEST = new Person("60a_b@c!DE", "Michael", "Jackson", "1|SmoothCriminal St|Melbourne|Victoria|Australia", "14-11-1987", false);
+
+        //Actual data we are testing
+        jacksonTEST.addOffense("1-06-2021", 1);
+
+        String status = jacksonTEST.addDemeritPoints(filename);
+        boolean result = false;
+
+        if (status == "Success") {
+            result = true;
+        }
+
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void validDateFormat() {
+        String filename = "test4";
+        Main.createFile(filename);
+        
+        Person plutoTEST = new Person("61a_b@c!DE", "Armond", "Pluto", "1|Knight St|Melbourne|Victoria|Australia", "03-06-1991", false);
+
+        //Actual data we are testing
+        plutoTEST.addOffense("04-02-2020", 1);
+
+        String status = plutoTEST.addDemeritPoints(filename);
+        boolean result = false;
+
+        if (status == "Success") {
+            result = true;
+        }
+
+        assertEquals(true, result);
     }
 
 }
