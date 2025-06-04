@@ -65,7 +65,7 @@ public class Person {
         return this.isSuspended;
     }
   
-    //todo: This method adds information about a person to a TXT file.
+    //This method adds information about a person to a TXT file.
     public boolean addPerson() {
         String pID = this.getPersonID();
         int numSpecialCharacters = 0;

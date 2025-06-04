@@ -7,38 +7,44 @@ import com.group28.Main;
 import com.group28.Person;
 
 public class Testing{
-//Tests for addPerson function
+//--------------------- Tests for addPerson() ---------------------
 
-    //Test if program will write write a person to the text file if their PersonID is invalid length (not 10)
+    //Test if the function will return false if the input PersonID has an invalid length (not 10).
     @Test
-    public void invalidPersonID(){
+    public void invalidPersonIDLength(){
             Person thomas = new Person("35s8_d%^fLX", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "04-03-2004", false);
             assertEquals(thomas.addPerson(), false);
     }
 
-    //Test if program will write write a person to the text file if their PersonID is valid and follows all requirements
+    //Test if the function will return false if the input PersonID has invalid first 2 characters (should be numbers between 2 and 9).
+    @Test
+    public void invalidPersonIDCharacters(){
+        Person thomas = new Person("11s_d%&fAB", "Michael", "Jackson", "17|Ayden Street|Manchester|Victoria|Australia", "14-13-2011", false);
+        assertFalse(thomas.addPerson());
+    }
+
+    //Test if the function will return true if the input PersonID is valid and follows all requirements.
     @Test
     public void validPersonID(){
-            Person thomas = new Person("56s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "04-03-2004", false);
+            Person thomas = new Person("56s_d%&fAB", "Andrew", "Markus", "81|Hood Street|Newport|Victoria|Australia", "03-08-2003", false);
             assertEquals(thomas.addPerson(), true);
     }
 
-    //Test if program will write write a person to the text file if their address is not within Victoria
+    //Test if the function will return false if the input address is not within Victoria.
     @Test
-    public void validateAddress(){
-        Person thomas = new Person("566s_d%&fAB", "Thomas", "Felsenthal", "13|Geek Street|Hobart|Tasmania|Australia", "04-03-2004", false);
+    public void validAddress(){
+        Person thomas = new Person("566s_d%&fAB", "Luther", "Vandross", "13|Geek Street|Hobart|Tasmania|Australia", "04-03-2004", false);
         assertEquals(thomas.addPerson(), false);
     }
 
 
-    //Test if program will write write a person to the text file if their birthdate is invalid (e.g. month == 13)
+    //Test if the function will return false if the input birthdate is invalid (e.g. month == 13)
     @Test
-    public void validateBirthdate(){
-        Person thomas = new Person("66s_d%&fAB", "Thomas", "Felsenthal", "17|Lit Street|Yodieland|Victoria|Australia", "14-13-2011", false);
+    public void invalidBirthdate(){
+        Person thomas = new Person("66s_d%&fAB", "Michael", "Jackson", "17|Ayden Street|Manchester|Victoria|Australia", "14-13-2011", false);
         assertFalse(thomas.addPerson());
     }
-
-
+    
 
 //--------------------- Tests for updatePersonalDetails() ---------------------
 
@@ -198,7 +204,6 @@ public class Testing{
 
         assertEquals(true, result);
     }
-
 }
 
 
