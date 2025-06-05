@@ -145,16 +145,6 @@ public class Person {
     }
 
 public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
-
-        //todo: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
-        //Changing personal details will not affect their demerit points or the suspension status.
-        // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
-        //Condition 1: If a person is under 18, their address cannot be changed.
-        //Condition 2: If a person's birthday is going to be changed, then no other personal detail (i.e., person's ID, firstName, lastName, address) can be changed.
-        //Condition 3: If the first character/digit of a person's ID is an even number, then their ID cannot be changed.
-        //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
-        //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
-        //Otherwise, the Person's updated information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
         
         // Parse the existing birthdate to calculate age
         String[] originalDOBParts = this.birthdate.split("-");
@@ -163,7 +153,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
 
         // Condition 1: If person is under 18, address cannot be changed
         if (age < 18 && !this.address.equals(newAddress)) {
-            System.out.println("Update failed: Address cannot be changed for persons under 18.");
+            System.out.println("Update failed: Address cannot be changed for persons under 18."); // prints a reason for error message.
             return false;
         }
 
@@ -173,7 +163,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
                 !this.firstName.equals(newFirstName) || 
                 !this.lastName.equals(newLastName) || 
                 !this.address.equals(newAddress)) {
-                System.out.println("Update failed: Only birthdate can be changed.");
+                System.out.println("Update failed: Only birthdate can be changed."); // prints a reason for error message.
                 return false;
             }
 
@@ -181,7 +171,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
             String[] bdParts = newBirthdate.split("-");
             if (bdParts.length != 3 || 
             Integer.parseInt(bdParts[1]) < 1 || Integer.parseInt(bdParts[1]) > 12) {
-            System.out.println("Update failed: Invalid birthdate format.");
+            System.out.println("Update failed: Invalid birthdate format."); // prints a reason for error message.
             return false;
             }
         }
@@ -190,21 +180,21 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         char firstChar = this.personID.charAt(0);
         if (Character.isDigit(firstChar) && (firstChar - '0') % 2 == 0) {
             if (!this.personID.equals(newID)) {
-                System.out.println("Update failed: ID cannot be changed for IDs starting with an even digit.");
+                System.out.println("Update failed: ID cannot be changed for IDs starting with an even digit."); // prints a reason for error message.
                 return false;
             }
         }
 
         // Validate new ID structure (same rules from addPerson)
         if (newID.length() != 10) {
-            System.out.println("Update failed: ID must be 10 characters long.");
+            System.out.println("Update failed: ID must be 10 characters long."); // prints a reason for error message.
             return false;
         }
 
         for (int i = 0; i < 2; ++i) {
             char c = newID.charAt(i);
             if (!Character.isDigit(c) || c < '2' || c > '9') {
-                System.out.println("Update failed: First two characters must be digits 2-9.");
+                System.out.println("Update failed: First two characters must be digits 2-9."); // prints a reason for error message.
                 return false;
             }
         }
@@ -217,14 +207,14 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         }
 
         if (numSpecialChars < 2) {
-            System.out.println("Update failed: Must contain at least two special characters between characters 3 and 8.");
+            System.out.println("Update failed: Must contain at least two special characters between characters 3 and 8."); // prints a reason for error message.
             return false;
         }
 
         for (int i = 8; i < 10; ++i) {
             char c = newID.charAt(i);
             if (!Character.isUpperCase(c)) {
-                System.out.println("Update failed: Last two characters must be uppercase letters.");
+                System.out.println("Update failed: Last two characters must be uppercase letters."); // prints a reason for error message.
                 return false;
             }
         }
@@ -234,7 +224,7 @@ public boolean updatePersonalDetails(String newID, String newFirstName, String n
         if (addressParts.length != 5 || 
             !addressParts[3].equals("Victoria") || 
             !addressParts[4].equals("Australia")) {
-            System.out.println("Update failed: Address must be in the format and located in Victoria, Australia.");
+            System.out.println("Update failed: Address must be in the format and located in Victoria, Australia."); // prints a reason for error message.
             return false;
         }
 
